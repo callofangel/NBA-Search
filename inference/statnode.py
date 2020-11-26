@@ -1,12 +1,4 @@
-import spacy 72     def response(self):
- 73         name = self.extract_name()
- 74         stat = self.extract_stat()
- 75         if not name:
- 76             return inc_name
- 77         elif not stat:
- 78             return inc_stat
- 79         stat_val = self.get_player_stat(name, stat)
- 80         return self.generate_random_response(name, stat, stat_val)
+import spacy 
 import random
 from modules.scraper import get_adv_stat, get_total_stat
 from data.text_data import adv_stat_map, total_stat_map
