@@ -6,10 +6,7 @@ from data.text_data import *
 from flask import Flask, render_template, request, jsonify, redirect
 import numpy as np
 
-
 app = Flask(__name__)
-
-
 
 """
 Function to handle routing to home page.
@@ -147,38 +144,37 @@ def get_bot_response():
     response = handler.process()
     return jsonify(response)
 
-@app.route("/player/<string:name>/stats/<string:stat>")
+@app.route("/v1/player/<string:name>/stats/<string:stat>")
 def player(name, stat):
     stats = get_total_stat(name, stat)
-    print(stats)
     return jsonify(player_name=name,
                     stats=stats)
                 
-@app.route("/player/fullstat/<string:name>")
+@app.route("/v1/player/fullstat/<string:name>")
 def full_stat(name):
     stats = list(total_stat_map)
-    json = []
-    boucle = len(stats)
     name = get_target_name(name)
-    print(stats)
-    for i in range(boucle) :
-        full_stats = get_total_stat(name, stats[i])
+    json = []
+    for key, value in dict.items(total_stat_map):
+        full_stats = get_total_stat(name, key)
         json.append(full_stats)
     
     json_array = np.array(json)
-    return jsonify(player_name = name,
-                    stats = json)
+    return jsonify(player_name = name, stats = json)
 
+
+"""
 @app.route("/team/<string:name>")
 def team(name):
     teams = List_Teams.get(name)
     return get_teams_url(teams)
 
-#@app.route("/team/<string:name>/stats/<string:stat>")
-#def team(name, stat):
-#    stats = get_total_stat(name, stat)
-#    print(stats)
-#    return jsonify(Team=name, stats=stats)
+@app.route("/team/<string:name>/stats/<string:stat>")
+def team(name, stat):
+    stats = get_total_stat(name, stat)
+    print(stats)
+    return jsonify(Team=name, stats=stats)
+
                 
 @app.route("/team/fullstat/<string:name>/")
 def full_stat_team(name):
@@ -192,9 +188,8 @@ def full_stat_team(name):
         json.append(full_stats)
     
     json_array = np.array(json)
-    return jsonify(Team = name,
-                    stats = json)
-
+    return jsonify(Team = name, stats = json)
+"""
 
 
 if __name__ == "__main__":
