@@ -2,11 +2,14 @@ from modules.analysis import isNBA
 from modules.scraper import *
 from modules.transformer import create_html_bracket
 from modules.query import Query
-from data.text_data import *
+from data.text_data import unsure, non_nba
 from flask import Flask, render_template, request, jsonify, redirect
 import numpy as np
 
+
 app = Flask(__name__)
+
+
 
 """
 Function to handle routing to home page.
@@ -123,8 +126,8 @@ def download(id):
 
 """
 Function to handle POST request from user
-with embedded message. The message is then 
-passed to the chatbot and the response is returned 
+with embedded message. The message is then
+passed to the chatbot and the response is returned
 to user.
 
 Parameters
@@ -147,10 +150,11 @@ def get_bot_response():
 @app.route("/v1/player/<string:name>/stats/<string:stat>")
 def player(name, stat):
     stats = get_total_stat(name, stat)
+    print(stats)
     return jsonify(player_name=name,
                     stats=stats)
-                
-@app.route("/v1/player/fullstat/<string:name>")
+
+@app.route("/v1/player/fullstat/<string:name>/")
 def full_stat(name):
     stats = list(total_stat_map)
     name = get_target_name(name)
@@ -158,39 +162,9 @@ def full_stat(name):
     for key, value in dict.items(total_stat_map):
         full_stats = get_total_stat(name, key)
         json.append(full_stats)
-    
+
     json_array = np.array(json)
     return jsonify(player_name = name, stats = json)
-
-
-"""
-@app.route("/team/<string:name>")
-def team(name):
-    teams = List_Teams.get(name)
-    return get_teams_url(teams)
-
-@app.route("/team/<string:name>/stats/<string:stat>")
-def team(name, stat):
-    stats = get_total_stat(name, stat)
-    print(stats)
-    return jsonify(Team=name, stats=stats)
-
-                
-@app.route("/team/fullstat/<string:name>/")
-def full_stat_team(name):
-    stats = list(total_stat_map)
-    json = []
-    boucle = len(stats)
-    name = get_target_name(name)
-    print(stats)
-    for i in range(boucle) :
-        full_stats = get_total_stat(name, stats[i])
-        json.append(full_stats)
-    
-    json_array = np.array(json)
-    return jsonify(Team = name, stats = json)
-"""
-
 
 if __name__ == "__main__":
     app.run()
